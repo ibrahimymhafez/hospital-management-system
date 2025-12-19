@@ -11,8 +11,4 @@ class Appointment:
         query = "insert into appointments(patient_id, doctor_id, day)"
         values = (self.patient, self.doctor, self.day )
         cursor.execute(query, values)
-        conn.commit
-
-        
-
-        
+        conn.commit()
