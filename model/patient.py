@@ -13,5 +13,12 @@ class Patient(Person):
         conn.commit()
 
     def delete_from_db(self, cursor, conn, id):
-        cursor.execute(f"delete from doctors where id = '{id}'") 
-        conn.commit
+        cursor.execute("select * from patients where id = %s", (id)) 
+        result = cursor.fetchone()
+        if result:
+            cursor.execute("delete from patients where id = &s", (id) )
+            conn.commit
+            print(f"patient with id {id} deleted")
+        else:
+            print("patient id not found")
+            

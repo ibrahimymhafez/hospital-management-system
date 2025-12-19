@@ -1,7 +1,5 @@
 from .person import Person
 
-
-
 class Doctor(Person):
     def __init__(self, name, specialization, department):
         super().__init__(name)
