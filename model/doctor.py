@@ -15,4 +15,4 @@ class Doctor(Person):
 
     def delete_from_db(self, cursor, conn, id):
         cursor.execute(f"delete from doctors where id = '{id}'") 
-        conn.commit
+        conn.commit()

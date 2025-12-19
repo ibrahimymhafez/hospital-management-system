@@ -17,8 +17,9 @@ class Patient(Person):
         result = cursor.fetchone()
         if result:
             cursor.execute("delete from patients where id = &s", (id) )
-            conn.commit
+            conn.commit()
             print(f"patient with id {id} deleted")
         else:
             print("patient id not found")
-            
+    
+
