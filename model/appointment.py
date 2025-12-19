@@ -1,5 +1,4 @@
 
-
 class Appointment:
     def __init__(self, patient, doctor, day):
         self.patient = patient
