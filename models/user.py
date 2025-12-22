@@ -4,9 +4,13 @@ class User(Person):
     def __init__(self, username, password):
         super().__init__(username)
         self.username = username
-        self.password = password
-        connect = connectDB.connect()
-        cursor = connect.cursor()
+        self._password = password
+    def set_password(self, password):
+        self._password = password
+    def get_password(self):
+        return self._password
+
+    def create_table(self,cursor, conn):
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,13 +22,13 @@ class User(Person):
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         """)
-        connect.commit()
+        conn.commit()
         print("User table created successfully.")
 
 
     def save_to_db(self, cursor, conn):
         query = "INSERT INTO users (username, password) VALUES (?, ?)"
-        values = (self.username, self.password)
+        values = (self.username, self.get_password())
         cursor.execute(query, values)
         conn.commit()
         print(f"User {self.username} saved to database successfully.")
