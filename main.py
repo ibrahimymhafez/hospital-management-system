@@ -38,7 +38,7 @@ class HospitalApp(ctk.CTk):  #this creates the main window
 
         self.frames = {}
         
-        # this creates both the log in screen and the dashboard and open the 
+        # this creates both the log in screen and the dashboard, the login screen opens first and switches to the dashboard after entering creditials
         for F in (LoginScreen, DashboardScreen):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
