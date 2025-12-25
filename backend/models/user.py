@@ -1,5 +1,5 @@
-from models.person import Person
-import database.connectDB as connectDB
+from backend.models.person import Person
+import backend.database.connectDB as connectDB
 class User(Person):
     def __init__(self, username, password):
         super().__init__(username)

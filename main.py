@@ -1,7 +1,7 @@
-import database.connectDB as connectDB
-from models.doctor import Doctor
-from models.user import User
-from controllers.auth import Auth
+import backend.database.connectDB as connectDB
+from backend.models.doctor import Doctor
+from backend.models.user import User
+from backend.controllers.auth import Auth
 def main():
     # doctor = Doctor("lol", "surgery", department_id=1)
     

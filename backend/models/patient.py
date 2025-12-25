@@ -1,4 +1,4 @@
-from person import Person
+from backend.models.person import Person
 
 class Patient(Person):
     def __init__(self, name, age, gender, phone, disease):

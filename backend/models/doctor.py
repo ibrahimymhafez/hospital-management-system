@@ -1,4 +1,4 @@
-from .person import Person
+from backend.models.person import Person
 
 
 class Doctor(Person):

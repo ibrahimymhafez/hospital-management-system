@@ -1,5 +1,5 @@
 import bcrypt
-from models.user import User
+from backend.models.user import User
 class Auth:
     def __init__(self):
         self.__curr_user = None
