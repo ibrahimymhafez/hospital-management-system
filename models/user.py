@@ -4,18 +4,24 @@ class User(Person):
     def __init__(self, username, password):
         super().__init__(username)
         self.username = username
-        self._password = password
-    def set_password(self, password):
-        self._password = password
-    def get_password(self):
-        return self._password
+        self.__password = password
 
-    def create_table(self,cursor, conn):
+
+    def set_password(self, password):
+        self.__password = password
+    def get_password(self):
+        return self.__password
+
+
+
+    def create_table(self):
+        conn = connectDB.connect()
+        cursor = conn.cursor()
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL,
+            password BLOB NOT NULL,
             role TEXT NOT NULL 
             CHECK (role IN ('admin', 'secretary')) 
             DEFAULT 'secretary',
@@ -26,15 +32,25 @@ class User(Person):
         print("User table created successfully.")
 
 
-    def save_to_db(self, cursor, conn):
+    def save_to_db(self):
+        conn = connectDB.connect()
+        cursor = conn.cursor()
         query = "INSERT INTO users (username, password) VALUES (?, ?)"
         values = (self.username, self.get_password())
         cursor.execute(query, values)
         conn.commit()
         print(f"User {self.username} saved to database successfully.")
 
+    def get_user_by_username(self, username):
+        conn = connectDB.connect()
+        cursor = conn.cursor()
+        query = "SELECT * FROM users WHERE username = ?"
+        cursor.execute(query, (username,))
+        return cursor.fetchone()
 
-    def update_user_info(self, cursor, conn, user_id, new_username, new_password):
+    def update_user_info(self, user_id, new_username, new_password):
+        conn = connectDB.connect()
+        cursor = conn.cursor()
         cursor.execute(
             "UPDATE users SET username = ?, password = ? WHERE id = ?",
             (new_username, new_password, user_id)
