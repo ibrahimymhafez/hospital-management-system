@@ -1,8 +1,8 @@
 from backend.models.person import Person
 
 class Patient(Person):
-    def __init__(self, name, age, gender, phone, disease):
-        super().__init__(name, age, gender, phone)
+    def __init__(self, name, age, gender, phone, email, disease):
+        super().__init__(name, age, gender, phone, email)
         self.disease = disease
     
     @staticmethod
@@ -25,8 +25,8 @@ class Patient(Person):
             print("Doctor or Patient does not exits")
             
     def save_to_db(self, cursor, conn):
-        values = (self.name, self.age, self.gender, self.phone, self.disease)
-        query = "INSERT INTO patients(name, age, gender, phone, disease) VALUES(?, ?, ?, ?, ?)"
+        values = (self.name, self.age, self.gender, self.phone, self.email, self.disease)
+        query = "INSERT INTO patients(name, age, gender, phone, email, disease) VALUES(?, ?, ?, ?, ?, ?)"
         cursor.execute(query, values)
         conn.commit()
         self.patient_id = cursor.lastrowid
@@ -45,7 +45,7 @@ class Patient(Person):
             print(f"Patient ID is not found.")
 
     def update_info(self, cursor, conn, patient_id):
-        query = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, disease = ? WHERE patient_id = ?"
-        values = (self.name, self.age, self.gender, self.phone, self.disease, patient_id)
+        query = "UPDATE patients SET name = ?, age = ?, gender = ?, phone = ?, email = ?, disease = ? WHERE patient_id = ?"
+        values = (self.name, self.age, self.gender, self.phone, self.email, self.disease, patient_id)
         cursor.execute(query, values)
         conn.commit()
