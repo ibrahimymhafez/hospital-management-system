@@ -8,7 +8,7 @@ import customtkinter as ctk
 from ui.login_screen import LoginScreen
 from ui.dashboard_screen import DashboardScreen
 
-def main():
+# def main():
     # doctor = Doctor("lol", "surgery", department_id=1)
     
     # doctor.save_to_db(cursor, connect)
@@ -17,10 +17,10 @@ def main():
 
     # user = User("Ahmed", "12345678")
     # auth.signUp("Ahmed", "12345678")
-    user = User("Ahmed", "12345678")
-    auth = Auth()
+    # user = User("Ahmed", "12345678")
+    # auth = Auth()
     # auth.signUp("Ahmed", "12345678")
-    auth.signIn("Ahmed", "123456788")
+    # auth.signIn("Ahmed", "123456788")
     # user.create_table(cursor, connect)
     # user.update_user_info(cursor, connect, 1, "AhmedYoussef", "123456789898")
     
@@ -52,7 +52,7 @@ class HospitalApp(ctk.CTk):  #this creates the main window
         frame.tkraise()
     
 if __name__ == "__main__":
-    main()
+    # main()
   
     HospitalApp = HospitalApp()
     HospitalApp.mainloop()
