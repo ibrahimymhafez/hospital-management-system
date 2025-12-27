@@ -2,7 +2,7 @@ import bcrypt
 from backend.models.user import User
 class Auth:
     def __init__(self):
-        pass
+        p
 
     def signUp(self, username, password):
         try:

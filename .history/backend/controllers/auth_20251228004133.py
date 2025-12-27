@@ -2,7 +2,7 @@ import bcrypt
 from backend.models.user import User
 class Auth:
     def __init__(self):
-        pass
+        self.__curr_user = None
 
     def signUp(self, username, password):
         try:

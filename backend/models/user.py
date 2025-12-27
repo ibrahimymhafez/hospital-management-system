@@ -1,10 +1,12 @@
 from backend.models.person import Person
 import backend.database.connectDB as connectDB
 class User(Person):
-    def __init__(self, username, password):
-        super().__init__(username)
+    def __init__(self, username, password,):
+        super().__init__(username,age="",gender="",phone="",email="")
         self.username = username
         self.__password = password
+
+        
 
 
     def set_password(self, password):
