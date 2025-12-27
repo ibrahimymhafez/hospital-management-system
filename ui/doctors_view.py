@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from backend.models.doctor import Doctor
 from backend.database.connectDB import connect
 from styles import HEADER_FONT, BODY_FONT
@@ -53,9 +53,9 @@ class DoctorsView(ctk.CTkFrame):
             self.tree.column(col, width=150)
             
         self.tree.pack(fill="both", expand=True)
-        
 
-        
+
+
         self.load_doctors()
 
     def load_doctors(self):
@@ -69,18 +69,16 @@ class DoctorsView(ctk.CTkFrame):
                 doctors = Doctor.get_all(cursor)
                 
                 for doc in doctors:
-                    # doc structure: (id, name, specialization, department_id)
-                    # Treeview columns: ("ID", "Name", "Specialty", "Contact", "Availability")
                     values = (doc[0], doc[1], doc[2], "N/A", "Available")
                     self.tree.insert("", "end", values=values)
             except Exception as e:
-                print(f"Error loading doctors: {e}")
+                messagebox.showerror("Error", f"Error loading doctors: {e}")
             finally:
                 conn.close()
 
     def perform_search(self):
         query = self.search_entry.get()
-        # If empty, reload all
+
         if not query.strip():
             self.load_doctors()
             return
@@ -98,7 +96,8 @@ class DoctorsView(ctk.CTkFrame):
                     values = (doc[0], doc[1], doc[2], "N/A", "Available")
                     self.tree.insert("", "end", values=values)
             except Exception as e:
-                print(f"Error searching doctors: {e}")
+                messagebox.showerror("Error", f"Error searching doctors: {e}")
+
             finally:
                 conn.close()
 
@@ -106,7 +105,7 @@ class DoctorsView(ctk.CTkFrame):
         dialog = ctk.CTkToplevel(self)
         dialog.title("Add New Doctor")
         dialog.geometry("400x400")
-        dialog.transient(self) # Make it modal-like
+        dialog.transient(self)
         
         # Center the window
         dialog.update_idletasks()
@@ -114,7 +113,6 @@ class DoctorsView(ctk.CTkFrame):
         height = dialog.winfo_height()
         x = (dialog.winfo_screenwidth() // 2) - (width // 2)
         y = (dialog.winfo_screenheight() // 2) - (height // 2)
-        # dialog.geometry(f"{width}x{height}+{x}+{y}")
         
         ctk.CTkLabel(dialog, text="Add New Doctor", font=("Roboto Medium", 18)).pack(pady=20)
         
@@ -142,13 +140,13 @@ class DoctorsView(ctk.CTkFrame):
 
     def save_new_doctor(self, dialog, name, spec, dept_id):
         if not name or not spec or not dept_id:
-            print("All fields are required")
+            messagebox.showwarning("Warning", "All fields are required")
             return
             
         try:
             dept_id = int(dept_id)
         except ValueError:
-            print("Department ID must be an integer")
+            messagebox.showwarning("Warning", "Department ID must be an integer")
             return
 
         conn = connect()
@@ -157,18 +155,18 @@ class DoctorsView(ctk.CTkFrame):
                 cursor = conn.cursor()
                 new_doc = Doctor(name, spec, dept_id)
                 new_doc.save_to_db(cursor, conn)
-                print("Doctor saved!")
+                messagebox.showinfo("Success", "Doctor saved successfully!")
                 dialog.destroy()
                 self.load_doctors() 
             except Exception as e:
-                print(f"Error saving doctor: {e}")
+                messagebox.showerror("Error", f"Error saving doctor: {e}")
             finally:
                 conn.close()
 
     def delete_doctor(self):
         selected_item = self.tree.selection()
         if not selected_item:
-            print("Please select a doctor to delete")
+            messagebox.showwarning("Warning", "Please select a doctor to delete")
             return
             
         # Get ID (first column)
@@ -182,16 +180,17 @@ class DoctorsView(ctk.CTkFrame):
             try:
                 cursor = conn.cursor()
                 Doctor.delete_from_db(cursor, conn, doctor_id)
+                messagebox.showinfo("Success", "Doctor deleted successfully")
                 self.load_doctors()
             except Exception as e:
-                print(f"Error deleting doctor: {e}")
+                messagebox.showerror("Error", f"Error deleting doctor: {e}")
             finally:
                 conn.close()
 
     def open_update_doctor_dialog(self):
         selected_item = self.tree.selection()
-        if not selected_item:
-            print("Please select a doctor to update")
+        if not selected_item:  
+            messagebox.showwarning("Warning", "Please select a doctor to update")
             return
             
         item = self.tree.item(selected_item)
@@ -212,7 +211,6 @@ class DoctorsView(ctk.CTkFrame):
         height = dialog.winfo_height()
         x = (dialog.winfo_screenwidth() // 2) - (width // 2)
         y = (dialog.winfo_screenheight() // 2) - (height // 2)
-        # dialog.geometry(f"{width}x{height}+{x}+{y}")
         
         ctk.CTkLabel(dialog, text="Update Doctor", font=("Roboto Medium", 18)).pack(pady=20)
         
@@ -256,13 +254,13 @@ class DoctorsView(ctk.CTkFrame):
 
     def save_updated_doctor(self, dialog, doc_id, name, spec, dept_id):
         if not name or not spec or not dept_id:
-            print("All fields are required")
+            messagebox.showwarning("Warning", "All fields are required")
             return
             
         try:
             dept_id = int(dept_id)
         except ValueError:
-            print("Department ID must be an integer")
+            messagebox.showwarning("Warning", "Department ID must be an integer")
             return
 
         conn = connect()
@@ -271,10 +269,10 @@ class DoctorsView(ctk.CTkFrame):
                 cursor = conn.cursor()
                 doc = Doctor(name, spec, dept_id)
                 doc.update_doc_info(cursor, conn, doc_id)
-                print("Doctor updated!")
+                messagebox.showinfo("Success", "Doctor updated successfully!")
                 dialog.destroy()
                 self.load_doctors()
             except Exception as e:
-                print(f"Error updating doctor: {e}")
+                messagebox.showerror("Error", f"Error updating doctor: {e}")
             finally:
                 conn.close()
