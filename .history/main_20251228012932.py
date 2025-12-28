@@ -5,9 +5,24 @@ from backend.controllers.auth import Auth
 
 
 import customtkinter as ctk
-from UI.login_view import LoginView
-from UI.dummy_dashboard import DashboardScreen
-from UI.signup_view import SignUpView
+from ui.login_screen import LoginScreen
+from ui.dashboard_screen import DashboardScreen
+
+def main():
+    # doctor = Doctor("lol", "surgery", department_id=1)
+    
+    # doctor.save_to_db(cursor, connect)
+    # doctor.delete_from_db(cursor, connect, 73)
+    
+
+    # user = User("Ahmed", "12345678")
+    # auth.signUp("Ahmed", "12345678")
+    user = User("Ahmed", "12345678")
+    auth = Auth()
+    # auth.signUp("Ahmed", "12345678")
+    auth.signIn("Ahmed", "123456788")
+    # user.create_table(cursor, connect)
+    # user.update_user_info(cursor, connect, 1, "AhmedYoussef", "123456789898")
     
 class HospitalApp(ctk.CTk):  
     def __init__(self):
@@ -49,3 +64,5 @@ def main():
 if __name__ == "__main__":
     main()
   
+    HospitalApp = HospitalApp()
+    HospitalApp.mainloop()

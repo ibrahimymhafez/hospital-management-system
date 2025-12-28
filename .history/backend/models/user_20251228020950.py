@@ -44,13 +44,15 @@ class User(Person):
         print(f"User {self.username} saved to database successfully.")
 
 
-    def get_user_by_username(self):
+    @staticmethod
+    def get_user_by_username(username):
         conn = connectDB.connect()
         cursor = conn.cursor()
         query = "SELECT * FROM users WHERE username = ?"
-        cursor.execute(query, (self.username,))
+        cursor.execute(query, (username,))
         return cursor.fetchone()
 
+    @staticmethod
     def update_user_info(self,new_username, new_password):
         conn = connectDB.connect()
         cursor = conn.cursor()
@@ -59,4 +61,4 @@ class User(Person):
             (new_username, new_password, self.username)
         )
         conn.commit()
-        print(f"User with username {self.username} updated successfully.")
+        print(f"User with id {user} updated successfully.")

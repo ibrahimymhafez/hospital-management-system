@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk, messagebox
-from styles import HEADER_FONT, BODY_FONT
+from .styles import HEADER_FONT, BODY_FONT
 from backend.models.patient import Patient
 
 class PatientsView(ctk.CTkFrame):
@@ -56,6 +56,7 @@ class PatientsView(ctk.CTkFrame):
         self.tree.pack(fill="both", expand=True)
         
         self.load_data()
+
 
     def load_data(self):
         # Clear 
@@ -192,3 +193,5 @@ class PatientDialog(ctk.CTkToplevel):
             
         self.callback(result)
         self.destroy()
+
+        
