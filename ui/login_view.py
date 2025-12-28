@@ -65,10 +65,10 @@ class LoginView(ctk.CTkFrame):
 
         self.label_welcome = ctk.CTkLabel(self.form_frame , text="Welcome Back" , font=("Aptos", 32 , "bold") , text_color="#00A9B0")
         self.label_welcome.grid(row=2 , column=0 , sticky="w", padx=20)
-        self.username_entry = ctk.CTkEntry(self.form_frame , corner_radius=40 , border_width=0, font=("Aptos", 15) , placeholder_text="Username",bg_color="transparent")
+        self.username_entry = ctk.CTkEntry(self.form_frame , corner_radius=40 , border_width=0, font=("Aptos", 17) , placeholder_text="Username",bg_color="transparent")
         self.username_entry.grid(row=3 , column=0 , sticky="nsew" , padx= 20 , pady=20)
 
-        self.password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 15) , placeholder_text="Password",bg_color="transparent")
+        self.password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 17) , placeholder_text="Password",bg_color="transparent")
         self.password_entry.grid(row=5 , column=0 , sticky="nsew" , padx= 20 , pady=20)
 
         self.login_button = ctk.CTkButton(self.form_frame , text="Login" , font=("Aptos", 15) , text_color="white" , fg_color="#00A9B0", command=self.handle_login)
@@ -85,7 +85,7 @@ class LoginView(ctk.CTkFrame):
         self.have_account_label.grid(row=0 , column=0 , sticky="ew")
 
         self.signup_button = ctk.CTkButton(self.have_account_frame , text="Create Account" , font=("Aptos", 15 , "bold") , text_color="black" , fg_color="transparent",hover_color="white", command=lambda: self.controller.show_frame("SignUpView"))
-        self.signup_button.grid(row=1 , column=0 , sticky="ew")
+        self.signup_button.grid(row=1 , column=0 )
 
         self.error_label = ctk.CTkLabel(self.form_frame , text="", text_color="red")
         self.error_label.grid(row=8 , column=0 , sticky="nsew" , padx= 20 , pady=20)

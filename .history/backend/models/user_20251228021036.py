@@ -48,7 +48,7 @@ class User(Person):
         conn = connectDB.connect()
         cursor = conn.cursor()
         query = "SELECT * FROM users WHERE username = ?"
-        cursor.execute(query, (self.username,))
+        cursor.execute(query, (username,))
         return cursor.fetchone()
 
     def update_user_info(self,new_username, new_password):

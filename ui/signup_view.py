@@ -59,17 +59,17 @@ class SignUpView(ctk.CTkFrame):
         self.label_form_image = ctk.CTkLabel(self.form_frame , image=self.hospital_logo_image , text="")
         self.label_form_image.grid(row=0 , column=0)
         self.label_form = ctk.CTkLabel(self.form_frame , text="HMS" , font=("Aptos", 20 , "bold") , text_color="#00A9B0")
-        self.label_form.grid(row=1 , column=0 , sticky="n" )
+        self.label_form.grid(row=1 , column=0 , padx=20,sticky="n" )
 
         self.label_welcome = ctk.CTkLabel(self.form_frame , text="Welcome To HMS" , font=("Aptos", 32 , "bold") , text_color="#00A9B0")
         self.label_welcome.grid(row=2 , column=0 , sticky="w", padx=20)
-        self.username_entry = ctk.CTkEntry(self.form_frame , corner_radius=40 , border_width=0, font=("Aptos", 15) , placeholder_text="Username",bg_color="transparent")
+        self.username_entry = ctk.CTkEntry(self.form_frame , corner_radius=40 , border_width=0, font=("Aptos", 17) , placeholder_text="Username",bg_color="transparent")
         self.username_entry.grid(row=3 , column=0 , sticky="nsew" , padx= 20 , pady=20)
 
-        self.password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 15) , placeholder_text="Password",bg_color="transparent")
+        self.password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 17) , placeholder_text="Password",bg_color="transparent")
         self.password_entry.grid(row=5 , column=0 , sticky="nsew" , padx= 20 )
 
-        self.confirm_password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 15) , placeholder_text="Confirm Password",bg_color="transparent")
+        self.confirm_password_entry = ctk.CTkEntry(self.form_frame , show="*", corner_radius=40 , border_width=0, font=("Aptos", 17) , placeholder_text="Confirm Password",bg_color="transparent")
         self.confirm_password_entry.grid(row=6 , column=0 , sticky="nsew" , padx= 20 , pady=20)
 
         self.sign_up_button = ctk.CTkButton(self.form_frame , text="Create Account" , font=("Aptos", 15 , "bold") , text_color="white" , fg_color="#00A9B0", command=self.handle_signup)
@@ -86,7 +86,7 @@ class SignUpView(ctk.CTkFrame):
         self.have_account_label.grid(row=0 , column=0 , sticky="ew")
 
         self.login_button = ctk.CTkButton(self.have_account_frame , text="Login" , font=("Aptos", 15 , "bold") , text_color="black" , fg_color="transparent",hover_color="white", command=lambda: self.controller.show_frame("LoginView"))
-        self.login_button.grid(row=1 , column=0 , sticky="ew")
+        self.login_button.grid(row=1 , column=0 )
 
         self.error_label = ctk.CTkLabel(self.form_frame , text="", text_color="red")
         self.error_label.grid(row=9 , column=0 , sticky="nsew" , padx= 20 , pady=20)

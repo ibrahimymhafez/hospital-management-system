@@ -4,8 +4,7 @@ class Auth:
     def __init__(self):
         pass
 
-    @staticmethod
-    def signUp(username, password):
+    def signUp(self, username, password):
         try:
             hashedPassword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             user = User(username.lower(), hashedPassword)
@@ -31,12 +30,11 @@ class Auth:
             return False , str(e)
 
 
-    @staticmethod
-    def signIn(username, password):
+    def signIn(self, username, password):
         try:
             user = User(username.lower(), password)
             user.create_table()
-            user_data = user.get_user_by_username()
+            user_data = user.get_user_by_username(username.lower())
             if not user_data:
                 raise Exception("User not found.")
             if not bcrypt.checkpw(password.encode('utf-8'), user_data[2]):
