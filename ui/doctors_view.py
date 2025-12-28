@@ -41,7 +41,7 @@ class DoctorsView(ctk.CTkFrame):
         tree_frame = ctk.CTkFrame(self) 
         tree_frame.pack(fill="both", expand=True)
 
-        cols = ("ID", "Name", "Specialty", "Contact", "Availability")
+        cols = ("ID", "Name", "Age", "Gender", "Specialty", "Phone", "Email", "Dept ID")
         self.tree = ttk.Treeview(tree_frame, columns=cols, show="headings", height=15)
         
         scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
@@ -53,7 +53,6 @@ class DoctorsView(ctk.CTkFrame):
             self.tree.column(col, width=150)
             
         self.tree.pack(fill="both", expand=True)
-
 
 
         self.load_doctors()
@@ -69,7 +68,7 @@ class DoctorsView(ctk.CTkFrame):
                 doctors = Doctor.get_all(cursor)
                 
                 for doc in doctors:
-                    values = (doc[0], doc[1], doc[2], "N/A", "Available")
+                    values = (doc[0], doc[1], doc[2], doc[3], doc[6], doc[4], doc[5], doc[7])
                     self.tree.insert("", "end", values=values)
             except Exception as e:
                 messagebox.showerror("Error", f"Error loading doctors: {e}")
@@ -93,7 +92,7 @@ class DoctorsView(ctk.CTkFrame):
                 doctors = Doctor.search(cursor, query)
                 
                 for doc in doctors:
-                    values = (doc[0], doc[1], doc[2], "N/A", "Available")
+                    values = (doc[0], doc[1], doc[2], doc[3], doc[6], doc[4], doc[5], doc[7])
                     self.tree.insert("", "end", values=values)
             except Exception as e:
                 messagebox.showerror("Error", f"Error searching doctors: {e}")
@@ -104,7 +103,7 @@ class DoctorsView(ctk.CTkFrame):
     def open_add_doctor_dialog(self):
         dialog = ctk.CTkToplevel(self)
         dialog.title("Add New Doctor")
-        dialog.geometry("400x400")
+        dialog.geometry("400x600")
         dialog.transient(self)
         
         # Center the window
@@ -124,6 +123,22 @@ class DoctorsView(ctk.CTkFrame):
         name_entry = ctk.CTkEntry(form_frame)
         name_entry.pack(fill="x", pady=(0, 10))
         
+        ctk.CTkLabel(form_frame, text="Age:").pack(anchor="w")
+        age_entry = ctk.CTkEntry(form_frame)
+        age_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Gender:").pack(anchor="w")
+        gender_entry = ctk.CTkEntry(form_frame)
+        gender_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Phone:").pack(anchor="w")
+        phone_entry = ctk.CTkEntry(form_frame)
+        phone_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Email:").pack(anchor="w")
+        email_entry = ctk.CTkEntry(form_frame)
+        email_entry.pack(fill="x", pady=(0, 10))
+
         ctk.CTkLabel(form_frame, text="Specialization:").pack(anchor="w")
         spec_entry = ctk.CTkEntry(form_frame)
         spec_entry.pack(fill="x", pady=(0, 10))
@@ -133,12 +148,19 @@ class DoctorsView(ctk.CTkFrame):
         dept_entry.pack(fill="x", pady=(0, 10))
         
         save_btn = ctk.CTkButton(dialog, text="Save Doctor", 
-                                 command=lambda: self.save_new_doctor(dialog, name_entry.get(), spec_entry.get(), dept_entry.get()))
+                                 command=lambda: self.save_new_doctor(dialog, 
+                                                                    name_entry.get(), 
+                                                                    age_entry.get(),
+                                                                    gender_entry.get(), 
+                                                                    phone_entry.get(), 
+                                                                    email_entry.get(),
+                                                                    spec_entry.get(), 
+                                                                    dept_entry.get()))
         save_btn.pack(pady=20)
         
         dialog.after(100, dialog.grab_set)
 
-    def save_new_doctor(self, dialog, name, spec, dept_id):
+    def save_new_doctor(self, dialog, name, age, gender, phone, email, spec, dept_id):
         if not name or not spec or not dept_id:
             messagebox.showwarning("Warning", "All fields are required")
             return
@@ -153,7 +175,7 @@ class DoctorsView(ctk.CTkFrame):
         if conn:
             try:
                 cursor = conn.cursor()
-                new_doc = Doctor(name, spec, dept_id)
+                new_doc = Doctor(name, age, gender, phone, email, spec, dept_id)
                 new_doc.save_to_db(cursor, conn)
                 messagebox.showinfo("Success", "Doctor saved successfully!")
                 dialog.destroy()
@@ -189,7 +211,7 @@ class DoctorsView(ctk.CTkFrame):
 
     def open_update_doctor_dialog(self):
         selected_item = self.tree.selection()
-        if not selected_item:  
+        if not selected_item:
             messagebox.showwarning("Warning", "Please select a doctor to update")
             return
             
@@ -199,12 +221,19 @@ class DoctorsView(ctk.CTkFrame):
         
         doc_id = values[0]
         current_name = values[1]
-        current_spec = values[2]
         
         dialog = ctk.CTkToplevel(self)
         dialog.title("Update Doctor")
-        dialog.geometry("400x400")
+        dialog.geometry("400x600")
         dialog.transient(self)
+        
+        # Doc values: ID, Name, Age, Gender, Specialty, Phone, Email, DeptID
+        current_age = values[2]
+        current_gender = values[3]
+        current_spec = values[4]
+        current_phone = values[5]
+        current_email = values[6]
+        current_dept_id = values[7]
         
         dialog.update_idletasks()
         width = dialog.winfo_width()
@@ -221,6 +250,26 @@ class DoctorsView(ctk.CTkFrame):
         name_entry = ctk.CTkEntry(form_frame)
         name_entry.insert(0, current_name)
         name_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Age:").pack(anchor="w")
+        age_entry = ctk.CTkEntry(form_frame)
+        age_entry.insert(0, current_age)
+        age_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Gender:").pack(anchor="w")
+        gender_entry = ctk.CTkEntry(form_frame)
+        gender_entry.insert(0, current_gender)
+        gender_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Phone:").pack(anchor="w")
+        phone_entry = ctk.CTkEntry(form_frame)
+        phone_entry.insert(0, current_phone)
+        phone_entry.pack(fill="x", pady=(0, 10))
+
+        ctk.CTkLabel(form_frame, text="Email:").pack(anchor="w")
+        email_entry = ctk.CTkEntry(form_frame)
+        email_entry.insert(0, current_email)
+        email_entry.pack(fill="x", pady=(0, 10))
         
         ctk.CTkLabel(form_frame, text="Specialization:").pack(anchor="w")
         spec_entry = ctk.CTkEntry(form_frame)
@@ -230,29 +279,24 @@ class DoctorsView(ctk.CTkFrame):
         ctk.CTkLabel(form_frame, text="Department ID:").pack(anchor="w")
         dept_entry = ctk.CTkEntry(form_frame)
         
-        # Fetch current department ID
-        conn = connect()
-        current_dept_id = ""
-        if conn:
-            try:
-                cursor = conn.cursor()
-                cursor.execute("SELECT department_id FROM doctors WHERE id=?", (doc_id,))
-                res = cursor.fetchone()
-                if res:
-                    current_dept_id = res[0]
-            finally:
-                conn.close()
-
         dept_entry.insert(0, str(current_dept_id))
         dept_entry.pack(fill="x", pady=(0, 10))
         
         save_btn = ctk.CTkButton(dialog, text="Update Doctor", 
-                                 command=lambda: self.save_updated_doctor(dialog, doc_id, name_entry.get(), spec_entry.get(), dept_entry.get()))
+                                 command=lambda: self.save_updated_doctor(dialog, 
+                                                                        doc_id,
+                                                                        name_entry.get(),
+                                                                        age_entry.get(),
+                                                                        gender_entry.get(),
+                                                                        phone_entry.get(),
+                                                                        email_entry.get(),
+                                                                        spec_entry.get(),
+                                                                        dept_entry.get()))
         save_btn.pack(pady=20)
         
         dialog.after(100, dialog.grab_set)
 
-    def save_updated_doctor(self, dialog, doc_id, name, spec, dept_id):
+    def save_updated_doctor(self, dialog, doc_id, name, age, gender, phone, email, spec, dept_id):
         if not name or not spec or not dept_id:
             messagebox.showwarning("Warning", "All fields are required")
             return
@@ -267,7 +311,7 @@ class DoctorsView(ctk.CTkFrame):
         if conn:
             try:
                 cursor = conn.cursor()
-                doc = Doctor(name, spec, dept_id)
+                doc = Doctor(name, age, gender, phone, email, spec, dept_id)
                 doc.update_doc_info(cursor, conn, doc_id)
                 messagebox.showinfo("Success", "Doctor updated successfully!")
                 dialog.destroy()
