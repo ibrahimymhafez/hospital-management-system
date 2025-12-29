@@ -34,6 +34,10 @@ class HospitalApp(ctk.CTk):
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
+        if page_name == "SignUpView" or page_name == "LoginView":
+            self.resizable(False, False)
+        else:
+            self.resizable(True, True)
         frame.tkraise()
 
     def set_current_user(self, user):
