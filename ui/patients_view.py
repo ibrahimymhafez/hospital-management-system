@@ -6,7 +6,7 @@ from backend.models.patient import Patient
 from backend.database.connectDB import connect
 
 class PatientsView(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, controller=None):
         super().__init__(parent, fg_color="transparent")
         
         # Header

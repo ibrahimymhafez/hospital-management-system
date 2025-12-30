@@ -37,6 +37,7 @@ class Doctor(Person):
         JOIN departments ON doctors.department_id = departments.id 
         WHERE departments.name = ?
         """
+        cursor.execute(query, (dept_name,))
         return cursor.fetchall()
     def update_doc_info(self, cursor, conn, doctor_id):
         cursor.execute(

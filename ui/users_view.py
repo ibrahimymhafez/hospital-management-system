@@ -6,8 +6,9 @@ import bcrypt
 from backend.controllers.auth import Auth
 class users_view(ctk.CTkFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, controller=None):
         super().__init__(parent)
+        self.controller = controller
         
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
         header_frame.pack(pady=10, fill="both", expand=True)

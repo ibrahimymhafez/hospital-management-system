@@ -12,11 +12,12 @@ class Sidebar(ctk.CTkFrame):
         logo_label = ctk.CTkLabel(self, text="🏥 HMS", font=HEADER_FONT)
         logo_label.pack(pady=30)
 
-        self.create_nav_btn("Dashboard", "DashboardHome") # Changed to distinct name if needed, or handle in show_view
+        # self.create_nav_btn("Dashboard", "DashboardHome") 
         self.create_nav_btn("Patients", "PatientsView")
         self.create_nav_btn("Doctors", "DoctorsView")
         self.create_nav_btn("Appointments", "AppointmentsView")
-        self.create_nav_btn("Billing", "BillingView")
+        self.create_nav_btn("Users", "users_view")
+        # self.create_nav_btn("Billing", "BillingView")
         
         ctk.CTkFrame(self, fg_color="transparent").pack(fill="both", expand=True)
 
@@ -42,7 +43,7 @@ class Sidebar(ctk.CTkFrame):
                             text_color=("gray10", "gray90"),
                             hover_color=("gray70", "gray30"), 
                             anchor="w", 
-                            command=lambda: self.dashboard.show_view(view_name))
+                            command=lambda: self.controller.show_frame(view_name))
 
         btn.pack(fill="x", pady=2, padx=10)
 

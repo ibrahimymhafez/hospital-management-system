@@ -8,7 +8,7 @@ from .styles import HEADER_FONT, BODY_FONT
 
 
 class DoctorsView(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, controller=None):
         super().__init__(parent, fg_color="transparent")
         
         # Header
