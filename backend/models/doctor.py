@@ -23,7 +23,21 @@ class Doctor(Person):
         cursor.execute("DELETE FROM doctors WHERE id = ?", (doctor_id,))
         print(f"Doctor with id {doctor_id} deleted successfully.")
         conn.commit()
-        
+
+    @staticmethod
+    def get_all_departments(cursor):
+        cursor.execute("SELECT id, name FROM departments")
+        return cursor.fetchall()
+    
+    @staticmethod
+    def get_doctors_by_dept_name(cursor, dept_name):
+        query = """
+        SELECT doctors.id, doctors.name, doctors.specialization 
+        FROM doctors 
+        JOIN departments ON doctors.department_id = departments.id 
+        WHERE departments.name = ?
+        """
+        return cursor.fetchall()
     def update_doc_info(self, cursor, conn, doctor_id):
         cursor.execute(
             "UPDATE doctors SET name = ?, age = ?, gender = ?, phone = ?, email = ?, specialization = ?, department_id = ? WHERE id = ?",
