@@ -127,6 +127,9 @@ class PatientsView(ctk.CTkFrame):
 
     def delete_patient(self):
         selected = self.tree.selection()
+        if self.controller.get_current_user()[3] != "admin":
+            messagebox.showerror("Error", "You are not authorized to delete patients")
+            return
         if not selected:
             messagebox.showwarning("Warning", "Please select a patient to delete.")
             return

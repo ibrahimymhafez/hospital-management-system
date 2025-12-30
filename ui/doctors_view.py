@@ -161,6 +161,9 @@ class DoctorsView(ctk.CTkFrame):
         dialog.after(100, dialog.grab_set)
 
     def save_new_doctor(self, dialog, name, age, gender, phone, email, spec, dept_id):
+        if self.controller.get_current_user()[3] != "admin":
+            messagebox.showerror("Error", "You are not authorized to add doctors")
+            return
         if not name or not spec or not dept_id:
             messagebox.showwarning("Warning", "All fields are required")
             return
@@ -186,6 +189,9 @@ class DoctorsView(ctk.CTkFrame):
                 conn.close()
 
     def delete_doctor(self):
+        if self.controller.get_current_user()[3] != "admin":
+            messagebox.showerror("Error", "You are not authorized to delete doctors")
+            return
         selected_item = self.tree.selection()
         if not selected_item:
             messagebox.showwarning("Warning", "Please select a doctor to delete")
@@ -210,6 +216,9 @@ class DoctorsView(ctk.CTkFrame):
                 conn.close()
 
     def open_update_doctor_dialog(self):
+        if self.controller.get_current_user()[3] != "admin":
+            messagebox.showerror("Error", "You are not authorized to update doctors")
+            return
         selected_item = self.tree.selection()
         if not selected_item:
             messagebox.showwarning("Warning", "Please select a doctor to update")

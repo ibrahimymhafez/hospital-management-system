@@ -6,9 +6,9 @@ import bcrypt
 from backend.controllers.auth import Auth
 class users_view(ctk.CTkFrame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, controller):
         super().__init__(parent)
-        
+        self.controller = controller
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
         header_frame.pack(pady=10, fill="both", expand=True)
 
@@ -216,9 +216,6 @@ class users_view(ctk.CTkFrame):
 
 
     def add_user(self):
-        if self.controller.get_current_user()[3] != "admin":
-            messagebox.showerror("Error", "You are not authorized to add users")
-            return
         self.dialog2 = ctk.CTkToplevel(self.controller)
         self.dialog2.title("Add User")
         self.dialog2.geometry("400x300")
