@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from .styles import HEADER_FONT, BODY_FONT
-
 class Sidebar(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent, width=200, corner_radius=0)
@@ -32,7 +31,7 @@ class Sidebar(ctk.CTkFrame):
                                     border_width=2,
                                     text_color=("gray10", "gray90"),
                                     hover_color=("gray70", "gray30"),
-                                    command=lambda: self.controller.show_frame("LoginScreen"))
+                                    command=lambda: self.controller.show_frame("LoginView"))
 
         logout_btn.pack(fill="x", pady=20, padx=20)
 
@@ -43,9 +42,19 @@ class Sidebar(ctk.CTkFrame):
                             text_color=("gray10", "gray90"),
                             hover_color=("gray70", "gray30"), 
                             anchor="w", 
-                            command=lambda: self.controller.show_frame(view_name))
+                            command=lambda: self.check_frame(view_name)
+                            )
 
         btn.pack(fill="x", pady=2, padx=10)
+
+    def check_frame(self, view_name):
+        self.controller.show_frame(view_name)
+        if view_name == "users_view":
+            users_view = self.controller.frames[view_name]
+            users_view.get_all_users()
+            users_view.count_all_users()
+            users_view.count_secretary_users()
+            users_view.count_admin_users()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)

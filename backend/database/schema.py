@@ -1,5 +1,5 @@
 import sqlite3
-
+import bcrypt
 def create_new_schema():
     # Connect to the database (it will be created if it doesn't exist)
     conn = sqlite3.connect('hospital.db')
@@ -20,7 +20,7 @@ def create_new_schema():
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL,
+        password BLOB NOT NULL,
         role TEXT NOT NULL CHECK (role IN ('admin', 'secretary')) DEFAULT 'secretary',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         gender TEXT,
@@ -75,7 +75,8 @@ def create_new_schema():
 
     # Optional: Insert default admin user if not exists
     try:
-        cursor.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin')")
+        hashed_password = bcrypt.hashpw("admin1234@".encode('utf-8'), bcrypt.gensalt())
+        cursor.execute("INSERT INTO users (username, password, role) VALUES ('admin', ? , 'admin')", (hashed_password,))
         print("Default admin user created.")
     except sqlite3.IntegrityError:
         pass # Admin already exists

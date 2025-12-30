@@ -8,6 +8,7 @@ from backend.database.connectDB import connect
 class PatientsView(ctk.CTkFrame):
     def __init__(self, parent, controller=None):
         super().__init__(parent, fg_color="transparent")
+        self.controller = controller
         
         # Header
         header_frame = ctk.CTkFrame(self, fg_color="transparent")

@@ -5,8 +5,9 @@ from backend.models.user import User
 import bcrypt
 from backend.controllers.auth import Auth
 class users_view(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, controller=None):
         super().__init__(parent)
+        self.controller = controller
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
         header_frame.pack(pady=10, fill="both", expand=True)
 
@@ -155,7 +156,7 @@ class users_view(ctk.CTkFrame):
                 return
         
             user_id = self.tree.item(selected_item)['values'][0]
-            self.dialog = ctk.CTkToplevel(self.controller)
+            self.dialog = ctk.CTkToplevel(self)
 
             self.dialog.title("Update User")
             self.dialog.geometry("400x300")
@@ -167,7 +168,7 @@ class users_view(ctk.CTkFrame):
             role_dropdown = ctk.CTkComboBox(self.dialog, values=["admin", "secretary"])
             role_dropdown.set(self.tree.item(selected_item)['values'][2])
             role_dropdown.pack(pady=10)
-            password_entry = ctk.CTkEntry(self.dialog)
+            password_entry = ctk.CTkEntry(self.dialog,placeholder_text="Password",show="*")
             password_entry.pack(pady=10)
 
             update_button = ctk.CTkButton(
@@ -214,7 +215,7 @@ class users_view(ctk.CTkFrame):
 
 
     def add_user(self):
-        self.dialog2 = ctk.CTkToplevel(self.controller)
+        self.dialog2 = ctk.CTkToplevel(self)
         self.dialog2.title("Add User")
         self.dialog2.geometry("400x300")
         label = ctk.CTkLabel(self.dialog2, text="Add User")
@@ -229,7 +230,7 @@ class users_view(ctk.CTkFrame):
         add_button = ctk.CTkButton(
             self.dialog2,
             text="Add User",
-            command=self.handle_add_user)
+            command=lambda: self.handle_add_user())
         add_button.pack(pady=10)
         self.error_label2 = ctk.CTkLabel(self.dialog2, text="", text_color="red")
         self.error_label2.pack(pady=10)

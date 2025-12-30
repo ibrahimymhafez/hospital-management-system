@@ -10,8 +10,6 @@ class LoginView(ctk.CTkFrame):
         self.controller = controller
         ctk.set_appearance_mode("light")
 
-        controller.title("Login Window")
-
         self.bg_color = "#C3E9ED"
         self.configure(fg_color=self.bg_color)
         self.grid_rowconfigure(0 , weight=1)
