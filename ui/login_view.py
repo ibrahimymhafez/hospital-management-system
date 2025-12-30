@@ -101,6 +101,11 @@ class LoginView(ctk.CTkFrame):
         if result:
             self.controller.set_current_user(user_data)
             self.controller.show_frame("AppointmentsView")
+            users = self.controller.frames["users_view"]
+            users.get_all_users()
+            users.count_all_users()
+            users.count_secretary_users()
+            users.count_admin_users()
             print(user_data)
         else:
             self.error_label.configure(text=user_data)

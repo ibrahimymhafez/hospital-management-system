@@ -42,13 +42,13 @@ class Sidebar(ctk.CTkFrame):
                             text_color=("gray10", "gray90"),
                             hover_color=("gray70", "gray30"), 
                             anchor="w", 
-                            command=lambda: self.check_frame(view_name)
+                            command=lambda: self.controller.show_frame(view_name)
                             )
 
         btn.pack(fill="x", pady=2, padx=10)
 
     def check_frame(self, view_name):
-        self.controller.show_frame(view_name)
+        
         if view_name == "users_view":
             users_view = self.controller.frames[view_name]
             users_view.get_all_users()
