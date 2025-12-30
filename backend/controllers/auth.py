@@ -9,7 +9,7 @@ class Auth:
         try:
             hashedPassword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             user = User(username.lower(), hashedPassword)
-            user1 = user.get_user_by_username()
+            user1 = user.get_user_by_username(username.lower())
             if user1:
                 raise Exception("User already exists.")
             
