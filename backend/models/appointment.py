@@ -73,7 +73,7 @@ class Appointment:
             print(f"Error deleting appointment: {e}")
 
     @staticmethod
-    def get_doctor_queue(cursor, doctor_id):
+    def backend_appointments(cursor, doctor_id):
         today_date = datetime.now().strftime('%Y-%m-%d')
 
         query = """

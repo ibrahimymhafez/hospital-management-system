@@ -15,13 +15,18 @@ class AppointmentsView(ctk.CTkFrame):
         # Header
         ctk.CTkLabel(self, text="Appointments Management", font=HEADER_FONT).pack(pady=20)
 
-        # Main Content - Split into Add and Delete sections
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        
-        # --- Add Appointment Section ---
-        add_frame = ctk.CTkFrame(self)
-        add_frame.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        # Main Content - Left (Add) and Right (Delete + View)
+        # --- Left Side Container (Add) ---
+        add_container = ctk.CTkFrame(self, fg_color="transparent")
+        add_container.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+
+        # --- Right Side Container (Delete + View) ---
+        right_container = ctk.CTkFrame(self, fg_color="transparent")
+        right_container.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
+        # --- Add Appointment Section (Left) ---
+        add_frame = ctk.CTkFrame(add_container)
+        add_frame.pack(fill="both", expand=True) # Full height on left
         
         ctk.CTkLabel(add_frame, text="Add Appointment", font=("Roboto Medium", 16)).pack(pady=10)
 
@@ -63,9 +68,9 @@ class AppointmentsView(ctk.CTkFrame):
         ctk.CTkButton(add_frame, text="Add Appointment", command=self.add_appointment).pack(pady=20)
 
 
-        # --- Delete Appointment Section ---
-        delete_frame = ctk.CTkFrame(self)
-        delete_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+        # --- Delete Appointment Section (Right Top) ---
+        delete_frame = ctk.CTkFrame(right_container)
+        delete_frame.pack(side="top", fill="both", expand=True, pady=(0, 10))
 
         ctk.CTkLabel(delete_frame, text="Delete Appointment", font=("Roboto Medium", 16)).pack(pady=10)
 
@@ -83,6 +88,27 @@ class AppointmentsView(ctk.CTkFrame):
         # Delete Button
         ctk.CTkButton(delete_frame, text="Delete Appointment", fg_color="#D32F2F", hover_color="#B71C1C", command=self.delete_appointment).pack(pady=20)
 
+        # --- View Doctor Appointments Section (Right Bottom) ---
+        view_frame = ctk.CTkFrame(right_container)
+        view_frame.pack(side="bottom", fill="both", expand=True)
+
+        ctk.CTkLabel(view_frame, text="View Doctor Schedule", font=("Roboto Medium", 16)).pack(pady=10)
+
+        # Department Dropdown (View)
+        ctk.CTkLabel(view_frame, text="Department:").pack(anchor="w", padx=20)
+        self.view_dept_var = ctk.StringVar(value="Select Department")
+        self.view_dept_menu = ctk.CTkOptionMenu(view_frame, variable=self.view_dept_var, command=self.on_view_department_change)
+        self.view_dept_menu.pack(fill="x", padx=20, pady=(0, 10))
+
+        # Doctor Dropdown (View)
+        ctk.CTkLabel(view_frame, text="Doctor:").pack(anchor="w", padx=20)
+        self.view_doctor_var = ctk.StringVar(value="Select Doctor")
+        self.view_doctor_menu = ctk.CTkOptionMenu(view_frame, variable=self.view_doctor_var, state="disabled")
+        self.view_doctor_menu.pack(fill="x", padx=20, pady=(0, 10))
+
+        # View Button
+        ctk.CTkButton(view_frame, text="Appointments", fg_color="#F9A825", hover_color="#FBC02D", command=self.show_doctor_appointments).pack(pady=20)
+
 
         # Load initial data
         self.load_departments()
@@ -97,6 +123,8 @@ class AppointmentsView(ctk.CTkFrame):
                 depts = Doctor.get_all_departments(cursor)
                 self.dept_map = {name: id for id, name in depts}
                 self.dept_menu.configure(values=list(self.dept_map.keys()))
+                if hasattr(self, 'view_dept_menu'):
+                     self.view_dept_menu.configure(values=list(self.dept_map.keys()))
             except Exception as e:
                 messagebox.showerror("Error", f"Error loading departments: {e}")
             finally:
@@ -159,14 +187,10 @@ class AppointmentsView(ctk.CTkFrame):
                 # Check patient exists
                 # Using Patient.search_patients which returns list of matches
                 patients = Patient.search_patients(cursor, patient_name)
-                # Filter for exact name match to be safe, or take first if name is unique enough
-                # The requirement says: "if the name isn't found, display the error message"
-                
+
                 found_patient_id = None
                 for p in patients:
-                    # p structure depends on table Columns. Assuming p[1] is name based on save_to_db order or schema.
-                    # Patient.search_patients SELECT * from patients.
-                    # Let's assume name is column 1 (0 is id).
+
                     if p[1].lower() == patient_name.lower():
                         found_patient_id = p[0]
                         break
@@ -224,3 +248,79 @@ class AppointmentsView(ctk.CTkFrame):
                 messagebox.showerror("Error", f"Error deleting appointment: {e}")
             finally:
                 conn.close()
+
+
+
+    def on_view_department_change(self, choice):
+        if choice == "Select Department":
+            return
+        
+        self.view_doctor_menu.set("Select Doctor")
+        self.view_doctor_menu.configure(state="normal", values=[])
+        
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                doctors = Doctor.get_doctors_by_dept_name(cursor, choice)
+                self.curr_view_dept_doctors = {doc[1]: doc[0] for doc in doctors} 
+                self.view_doctor_menu.configure(values=list(self.curr_view_dept_doctors.keys()))
+            except Exception as e:
+                messagebox.showerror("Error", f"Error loading doctors: {e}")
+            finally:
+                conn.close()
+
+    def show_doctor_appointments(self):
+        doctor_name = self.view_doctor_var.get()
+        if doctor_name == "Select Doctor":
+             messagebox.showwarning("Warning", "Please select a doctor.")
+             return
+
+        doctor_id = self.curr_view_dept_doctors.get(doctor_name)
+        
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                appointments = Appointment.backend_appointments(cursor, doctor_id)
+                self.open_appointments_popup(doctor_name, appointments)
+            except Exception as e:
+                messagebox.showerror("Error", f"Error fetching appointments: {e}")
+            finally:
+                conn.close()
+
+    def open_appointments_popup(self, doctor_name, appointments):
+        popup = ctk.CTkToplevel(self)
+        popup.title(f"Appointments for Dr. {doctor_name}")
+        popup.geometry("600x400")
+        
+        # Bring to front
+        popup.attributes("-topmost", True)
+        
+        ctk.CTkLabel(popup, text=f"Today's Schedule - Dr. {doctor_name}", font=("Roboto Medium", 16)).pack(pady=10)
+
+        scroll_frame = ctk.CTkScrollableFrame(popup)
+        scroll_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        if not appointments:
+            ctk.CTkLabel(scroll_frame, text="No appointments for today.").pack(pady=20)
+        else:
+            # Header
+            header_frame = ctk.CTkFrame(scroll_frame, fg_color="transparent")
+            header_frame.pack(fill="x", pady=5)
+            ctk.CTkLabel(header_frame, text="Ticket", width=50, font=("Roboto", 12, "bold")).pack(side="left", padx=5)
+            ctk.CTkLabel(header_frame, text="Patient Name", width=150, font=("Roboto", 12, "bold")).pack(side="left", padx=5)
+            ctk.CTkLabel(header_frame, text="Time", width=100, font=("Roboto", 12, "bold")).pack(side="left", padx=5)
+            ctk.CTkLabel(header_frame, text="Status", width=100, font=("Roboto", 12, "bold")).pack(side="left", padx=5)
+
+            for appt in appointments:
+                 # appt structure from get_doctor_queue: (id, name, date, Status, Payment)
+                row_frame = ctk.CTkFrame(scroll_frame)
+                row_frame.pack(fill="x", pady=2)
+                
+                time_str = appt[2].split()[1] if len(appt[2].split()) > 1 else appt[2]
+
+                ctk.CTkLabel(row_frame, text=str(appt[0]), width=50).pack(side="left", padx=5)
+                ctk.CTkLabel(row_frame, text=appt[1], width=150).pack(side="left", padx=5)
+                ctk.CTkLabel(row_frame, text=time_str, width=100).pack(side="left", padx=5)
+                ctk.CTkLabel(row_frame, text=appt[3], width=100).pack(side="left", padx=5)
