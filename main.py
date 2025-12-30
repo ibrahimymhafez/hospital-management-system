@@ -8,6 +8,7 @@ import customtkinter as ctk
 from UI.login_view import LoginView
 from UI.dummy_dashboard import DashboardScreen
 from UI.signup_view import SignUpView
+from UI.appointments_view import AppointmentsView
     
 class HospitalApp(ctk.CTk):  
     def __init__(self):
@@ -24,7 +25,7 @@ class HospitalApp(ctk.CTk):
 
         self.frames = {}
         
-        for F in (LoginView, DashboardScreen, SignUpView):
+        for F in (LoginView, DashboardScreen, SignUpView, AppointmentsView):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
