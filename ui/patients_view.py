@@ -118,7 +118,7 @@ class PatientsView(ctk.CTkFrame):
         
         PatientDialog(self, "Update Patient", self.update_patient_info, patient_data)
 
-    def save_patient(self, data):
+    def save_patient(self, data, dialog):
         conn = connect()
         if conn:
             try:
@@ -127,12 +127,13 @@ class PatientsView(ctk.CTkFrame):
                 p.save_to_db(cursor, conn)
                 self.load_data()
                 messagebox.showinfo("Success", "Patient added successfully!")
+                dialog.destroy()
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to add patient: {e}")
             finally:
                 conn.close()
 
-    def update_patient_info(self, data):
+    def update_patient_info(self, data, dialog):
         conn = connect()
         if conn:
             try:
@@ -141,6 +142,7 @@ class PatientsView(ctk.CTkFrame):
                 p.update_info(cursor, conn, data['id'])
                 self.load_data()
                 messagebox.showinfo("Success", "Patient updated successfully!")
+                dialog.destroy()
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to update patient: {e}")
             finally:
@@ -217,7 +219,6 @@ class PatientDialog(ctk.CTkToplevel):
         if self.patient_id:
             result['id'] = self.patient_id
             
-        self.callback(result)
-        self.destroy()
+        self.callback(result, self)
 
         
