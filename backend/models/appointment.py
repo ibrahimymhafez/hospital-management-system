@@ -44,15 +44,31 @@ class Appointment:
             print(f"Error saving appointment: {e}")
 
     @staticmethod
-    def delete_appointment(cursor, conn, appointment_id):
-        query = "DELETE FROM appointments WHERE id = ?"
+    def delete_appointment_by_names(cursor, conn, patient_name, doctor_name):
+        # check if name is exist in db
+        cursor.execute("SELECT id FROM patients WHERE name = ?", (patient_name,))
+        if cursor.fetchone() is None:
+            print(f"Error: Patient '{patient_name}' does not exist in the database.")
+            return
+
+        today_date = datetime.now().strftime('%Y-%m-%d')
+
+        query = """
+        DELETE FROM appointments
+        WHERE patient_id = (SELECT id FROM patients WHERE name = ?)
+        AND doctor_id = (SELECT id FROM doctors WHERE name = ?)
+        AND date(appointment_date) = ?
+        """
+        
         try:
-            cursor.execute(query, (appointment_id,))
+            cursor.execute(query, (patient_name, doctor_name, today_date))
+            
             if cursor.rowcount > 0:
                 conn.commit()
-                print(f"Appointment {appointment_id} deleted successfully.")
+                print(f"Appointment for {patient_name} with Dr. {doctor_name} deleted successfully.")
             else:
-                print("Appointment not found.")
+                print("No appointment found matching these names for today.")
+                
         except Exception as e:
             print(f"Error deleting appointment: {e}")
 
