@@ -3,12 +3,11 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from .styles import HEADER_FONT, BODY_FONT
 from backend.models.patient import Patient
+from backend.database.connectDB import connect
 
 class PatientsView(ctk.CTkFrame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, controller=None):
         super().__init__(parent, fg_color="transparent")
-        self.controller = controller
-        self.cursor = self.controller.db_conn.cursor()
         
         # Header
         header_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -63,11 +62,18 @@ class PatientsView(ctk.CTkFrame):
         for item in self.tree.get_children():
             self.tree.delete(item)
         
-        # Fetch 
-        patients = Patient.fetch_all_patients(self.cursor)
-        for p in patients:
-            values = (p[0], p[1], p[2], p[3], p[4], p[5])
-            self.tree.insert("", "end", values=values)
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                patients = Patient.fetch_all_patients(cursor)
+                for p in patients:
+                    values = (p[0], p[1], p[2], p[3], p[4], p[5])
+                    self.tree.insert("", "end", values=values)
+            except Exception as e:
+                messagebox.showerror("Error", f"Error loading patients: {e}")
+            finally:
+                conn.close()
 
     def search_patient(self):
         term = self.search_entry.get()
@@ -77,10 +83,18 @@ class PatientsView(ctk.CTkFrame):
         for item in self.tree.get_children():
             self.tree.delete(item)
             
-        patients = Patient.search_patients(self.cursor, term)
-        for p in patients:
-            values = (p[0], p[1], p[2], p[3], p[4], p[5])
-            self.tree.insert("", "end", values=values)
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                patients = Patient.search_patients(cursor, term)
+                for p in patients:
+                    values = (p[0], p[1], p[2], p[3], p[4], p[5])
+                    self.tree.insert("", "end", values=values)
+            except Exception as e:
+                messagebox.showerror("Error", f"Error searching patients: {e}")
+            finally:
+                conn.close()
 
     def open_add_dialog(self):
         PatientDialog(self, "Add Patient", self.save_patient)
@@ -104,26 +118,35 @@ class PatientsView(ctk.CTkFrame):
         
         PatientDialog(self, "Update Patient", self.update_patient_info, patient_data)
 
-    def save_patient(self, data):
-        # Create Patient Object
-        try:
-            p = Patient(data['name'], int(data['age']), data['gender'], data['phone'], data['email'])
-            p.save_to_db(self.cursor, self.controller.db_conn)
-            self.load_data()
-            messagebox.showinfo("Success", "Patient added successfully!")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to add patient: {e}")
+    def save_patient(self, data, dialog):
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                p = Patient(data['name'], int(data['age']), data['gender'], data['phone'], data['email'])
+                p.save_to_db(cursor, conn)
+                self.load_data()
+                messagebox.showinfo("Success", "Patient added successfully!")
+                dialog.destroy()
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to add patient: {e}")
+            finally:
+                conn.close()
 
-    def update_patient_info(self, data):
-        try:
-            # Update given the current values
-            p = Patient(data['name'], int(data['age']), data['gender'], data['phone'], data['email'])
-            # Using the update_info from patient model
-            p.update_info(self.cursor, self.controller.db_conn, data['id'])
-            self.load_data()
-            messagebox.showinfo("Success", "Patient updated successfully!")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to update patient: {e}")
+    def update_patient_info(self, data, dialog):
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                p = Patient(data['name'], int(data['age']), data['gender'], data['phone'], data['email'])
+                p.update_info(cursor, conn, data['id'])
+                self.load_data()
+                messagebox.showinfo("Success", "Patient updated successfully!")
+                dialog.destroy()
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to update patient: {e}")
+            finally:
+                conn.close()
 
     def delete_patient(self):
         selected = self.tree.selection()
@@ -140,12 +163,17 @@ class PatientsView(ctk.CTkFrame):
         item = self.tree.item(selected[0])
         patient_id = item['values'][0]
         
-        try:
-            Patient.delete_from_db(self.cursor, self.controller.db_conn, patient_id)
-            self.load_data()
-            messagebox.showinfo("Success", "Patient deleted.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to delete patient: {e}")
+        conn = connect()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                Patient.delete_from_db(cursor, conn, patient_id)
+                self.load_data()
+                messagebox.showinfo("Success", "Patient deleted.")
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to delete patient: {e}")
+            finally:
+                conn.close()
 
 
 class PatientDialog(ctk.CTkToplevel):
@@ -194,7 +222,6 @@ class PatientDialog(ctk.CTkToplevel):
         if self.patient_id:
             result['id'] = self.patient_id
             
-        self.callback(result)
-        self.destroy()
+        self.callback(result, self)
 
         

@@ -3,12 +3,12 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from backend.models.doctor import Doctor
 from backend.database.connectDB import connect
-from styles import HEADER_FONT, BODY_FONT
+from .styles import HEADER_FONT, BODY_FONT
 
 
 
 class DoctorsView(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, controller=None):
         super().__init__(parent, fg_color="transparent")
         
         # Header
@@ -128,7 +128,7 @@ class DoctorsView(ctk.CTkFrame):
         age_entry.pack(fill="x", pady=(0, 10))
 
         ctk.CTkLabel(form_frame, text="Gender:").pack(anchor="w")
-        gender_entry = ctk.CTkEntry(form_frame)
+        gender_entry = ctk.CTkOptionMenu(form_frame, values=["Male", "Female"])
         gender_entry.pack(fill="x", pady=(0, 10))
 
         ctk.CTkLabel(form_frame, text="Phone:").pack(anchor="w")
@@ -266,8 +266,8 @@ class DoctorsView(ctk.CTkFrame):
         age_entry.pack(fill="x", pady=(0, 10))
 
         ctk.CTkLabel(form_frame, text="Gender:").pack(anchor="w")
-        gender_entry = ctk.CTkEntry(form_frame)
-        gender_entry.insert(0, current_gender)
+        gender_entry = ctk.CTkOptionMenu(form_frame, values=["Male", "Female"])
+        gender_entry.set(current_gender)
         gender_entry.pack(fill="x", pady=(0, 10))
 
         ctk.CTkLabel(form_frame, text="Phone:").pack(anchor="w")

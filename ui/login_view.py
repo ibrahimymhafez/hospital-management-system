@@ -102,7 +102,7 @@ class LoginView(ctk.CTkFrame):
         
         if result:
             self.controller.set_current_user(user_data)
-            self.controller.show_frame("DashboardScreen")
+            self.controller.show_frame("AppointmentsView")
             print(user_data)
         else:
             self.error_label.configure(text=user_data)
