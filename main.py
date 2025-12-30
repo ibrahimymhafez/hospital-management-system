@@ -1,14 +1,14 @@
-import backend.database.connectDB as connectDB
-from backend.models.doctor import Doctor
-from backend.models.user import User
-from backend.controllers.auth import Auth
-
-
 import customtkinter as ctk
+<<<<<<< HEAD
 from UI.login_view import LoginView
 from UI.dummy_dashboard import DashboardScreen
 from UI.signup_view import SignUpView
 from UI.appointments_view import AppointmentsView
+=======
+from ui.login_view import LoginView
+from ui.dashboard import DashboardScreen
+from ui.signup_view import SignUpView
+>>>>>>> sidebar
     
 class HospitalApp(ctk.CTk):  
     def __init__(self):
