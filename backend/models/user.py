@@ -2,8 +2,8 @@ from backend.models.person import Person
 import backend.database.connectDB as connectDB
 import bcrypt
 class User(Person):
-    def __init__(self, username, password):
-        super().__init__(username)
+    def __init__(self, username, password,age="",gender="",phone="",email=""):
+        super().__init__(username,age,gender,phone,email)
         self.__username = username
         self.__password = password
 

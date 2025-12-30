@@ -36,7 +36,7 @@ class Auth:
         try:
             user = User(username.lower(), password)
             user.create_table()
-            user_data = user.get_user_by_username()
+            user_data = user.get_user_by_username(username.lower())
             if not user_data:
                 raise Exception("User not found.")
             if not bcrypt.checkpw(password.encode('utf-8'), user_data[2]):
