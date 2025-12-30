@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from backend.models.doctor import Doctor
 from backend.database.connectDB import connect
-from styles import HEADER_FONT, BODY_FONT
+from .styles import HEADER_FONT, BODY_FONT
 
 
 
