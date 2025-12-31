@@ -113,6 +113,13 @@ The project uses an Object-Oriented approach with the following core relationshi
 
 ---
 
+## Application Screens
+
+![Users Screen](assets/images/screens/users_admin_screen.jpeg)
+
+
+---
+
 ## Authors
 
 - [Ibrahim Hafez](https://github.com/ibrahimymhafez)
