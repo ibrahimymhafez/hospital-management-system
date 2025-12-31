@@ -3,7 +3,6 @@
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
 ![Database](https://img.shields.io/badge/Database-SQLite-lightgrey)
 ![GUI](https://img.shields.io/badge/GUI-CustomTkinter-brightgreen)
-![Build Status](https://github.com/ibrahimymhafez/hospital-management-system/actions/workflows/python-app.yml/badge.svg)
 
 A Python-based Hospital Management System that combines ***Object-Oriented Programming***, a modern CustomTkinter GUI, and **SQLite** integration. It enables users to manage patient data, doctor assignments, and user authentication through a clean, modular architecture.
 
@@ -103,14 +102,14 @@ You may need to sign up a new user via the "Sign Up" screen on the first run.
 ---
 
 ## Class Diagram
-
+![Class Diagram](assets/images/Backend_diagram.png)
 The project uses an Object-Oriented approach with the following core relationships:
 
 - **Person** (Base Class)
 - **Doctor** (Inherits from Person)
 - **Patient** (Inherits from Person)
 - **User** (Inherits from Person)
-
+- **Appointments** 
 ---
 
 ## Application Screens
