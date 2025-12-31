@@ -114,8 +114,23 @@ The project uses an Object-Oriented approach with the following core relationshi
 ---
 
 ## Application Screens
+# SignUp Screen
+![Patients Screen](assets/images/screens/signup_screen.jpeg)
 
+# SingIn Screen
+![Patients Screen](assets/images/screens/login_screen.jpeg)
+
+# Users Screen
 ![Users Screen](assets/images/screens/users_admin_screen.jpeg)
+
+# Patients Screen
+![Patients Screen](assets/images/screens/patient_screen.jpeg)
+
+# Docotrs Screen
+![Patients Screen](assets/images/screens/doctor_screen.jpeg)
+
+# Appointments Screen
+![Patients Screen](assets/images/screens/appointment_screen.jpeg)
 
 
 ---
