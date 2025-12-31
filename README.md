@@ -117,8 +117,8 @@ The project uses an Object-Oriented approach with the following core relationshi
 # SignUp Screen
 ![Patients Screen](assets/images/screens/signup_screen.jpeg)
 
-# SingIn Screen
-![Patients Screen](assets/images/screens/login_screen.jpeg)
+# Login Screen
+![Patients Screen](assets/images/screens/login_screen.png)
 
 # Users Screen
 ![Users Screen](assets/images/screens/users_admin_screen.jpeg)
