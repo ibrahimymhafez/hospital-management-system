@@ -102,7 +102,7 @@ You may need to sign up a new user via the "Sign Up" screen on the first run.
 ---
 
 ## Class Diagram
-![Class Diagram](assets/images/Backend_diagram.png)
+![Class Diagram](assets/images/backend_diagram.png)
 The project uses an Object-Oriented approach with the following core relationships:
 
 - **Person** (Base Class)
