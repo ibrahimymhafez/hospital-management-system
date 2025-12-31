@@ -138,6 +138,9 @@ The project uses an Object-Oriented approach with the following core relationshi
 ## Authors
 
 - [Ibrahim Hafez](https://github.com/ibrahimymhafez)
+- Ahmed Youssef
+- Samir Ahmed
+- Ahmed Rashed
 
 ## License
 
