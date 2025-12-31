@@ -1,11 +1,11 @@
 import customtkinter as ctk
-from UI.login_view import LoginView
-from UI.signup_view import SignUpView
-from UI.appointments_view import AppointmentsView
-from UI.doctors_view import DoctorsView
-from UI.patients_view import PatientsView
-from UI.users_view import users_view
-from UI.sidebar import Sidebar
+from ui.login_view import LoginView
+from ui.signup_view import SignUpView
+from ui.appointments_view import AppointmentsView
+from ui.doctors_view import DoctorsView
+from ui.patients_view import PatientsView
+from ui.users_view import users_view
+from ui.sidebar import Sidebar
 
 class HospitalApp(ctk.CTk):  
     def __init__(self):
