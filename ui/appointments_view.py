@@ -5,7 +5,7 @@ from backend.models.doctor import Doctor
 from backend.models.patient import Patient
 from backend.database.connectDB import connect
 from datetime import datetime
-from UI.styles import HEADER_FONT, BODY_FONT
+from ui.styles import HEADER_FONT, BODY_FONT
 
 class AppointmentsView(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -324,3 +324,4 @@ class AppointmentsView(ctk.CTkFrame):
                 ctk.CTkLabel(row_frame, text=appt[1], width=150).pack(side="left", padx=5)
                 ctk.CTkLabel(row_frame, text=time_str, width=100).pack(side="left", padx=5)
                 ctk.CTkLabel(row_frame, text=appt[3], width=100).pack(side="left", padx=5)
+
